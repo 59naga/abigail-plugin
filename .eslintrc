@@ -1,0 +1,13 @@
+---
+extends: airbnb/base
+parser: babel-eslint
+
+env:
+  node: true
+  mocha: true
+
+rules:
+  valid-jsdoc: [2,{"requireParamDescription":false}]
+  max-len: [1]
+  new-cap: [1, {"capIsNewExceptions": ["express.Router"]}]
+  arrow-body-style: [1]
