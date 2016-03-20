@@ -20,7 +20,7 @@ export default class Plugin {
     this.parent = parent;
     this.opts = defaultsDeep(
       {},
-      typeof options !== 'boolean' ? {value: options}: {},
+      typeof options !== 'boolean' ? { value: options } : {},
       this.constructor.defaultOptions,
       { process },
     );
