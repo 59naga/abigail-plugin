@@ -9,7 +9,7 @@ import Plugin from '../src';
 // fixture
 class UserPlugin extends Plugin {
   static defaultOptions = {
-    foo: 1,
+    foo: [1],
     value: 2,
   }
 
@@ -32,7 +32,7 @@ describe('Plugin', () => {
 
     assert.throws(
       () => {
-        const plugin = new UserPlugin;// eslint-disable-line no-unused-vars
+        const plugin = new UserPlugin;
       },
       (error) => {
         assert(error.message === expectMessage);
@@ -42,7 +42,7 @@ describe('Plugin', () => {
 
     assert.throws(
       () => {
-        const plugin = new UserPlugin({ on: 1 });// eslint-disable-line no-unused-vars
+        const plugin = new UserPlugin({ on: 1 });
       },
       (error) => {
         assert(error.message === expectMessage);
@@ -51,24 +51,31 @@ describe('Plugin', () => {
     );
   });
 
-  it('command argument value should be defined in opts.value', () => {
+  it('command argument value should be defined in opts.value unless boolean', () => {
+    let plugin;
     // e.g. $ abby --plugin foor,bar,baz -> plugin.opts.value is 'foo,bar,baz'
     const emitter = new AsyncEmitter;
-    const plugin = new UserPlugin(emitter, 'foo,bar,baz');
-
+    plugin = new UserPlugin(emitter, 'foo,bar,baz');
     assert(plugin.opts.value === 'foo,bar,baz');
+
+    plugin = new UserPlugin(emitter, 1);
+    assert(plugin.opts.value === 1);
   });
 
   it('default value for the plugin should be defined in the static defaultOptions property', () => {
-    const emitter = new AsyncEmitter;
-    const plugin = new UserPlugin(emitter);// eslint-disable-line no-unused-vars
+    let plugin;
 
-    assert(plugin.opts.foo === 1);
+    const emitter = new AsyncEmitter;
+    plugin = new UserPlugin(emitter);
+    assert(plugin.opts.foo[0] === 1);
+
+    plugin = new UserPlugin(emitter, null, { foo: 2 });
+    assert(plugin.opts.foo === 2);
   });
 
   it('should do pre-processing at the pluginWillAttach', () => {
     const emitter = new AsyncEmitter;
-    const plugin = new UserPlugin(emitter);// eslint-disable-line no-unused-vars
+    const plugin = new UserPlugin(emitter);
 
     return emitter.emit('beforeImmediate')
     .then((values) => {
@@ -78,7 +85,7 @@ describe('Plugin', () => {
 
   it('should do post-processing at the pluginWillDetach', () => {
     const emitter = new AsyncEmitter;
-    const plugin = new UserPlugin(emitter);// eslint-disable-line no-unused-vars
+    const plugin = new UserPlugin(emitter);
 
     return emitter.emit('beforeExit', 1)
     .then((values) => {

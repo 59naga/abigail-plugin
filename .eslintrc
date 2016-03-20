@@ -7,7 +7,12 @@ env:
   mocha: true
 
 rules:
-  valid-jsdoc: [2,{"requireParamDescription":false}]
-  max-len: [1]
-  new-cap: [1, {"capIsNewExceptions": ["express.Router"]}]
-  arrow-body-style: [1]
+  valid-jsdoc:
+    - 2
+    - requireParamDescription: false
+      prefer:
+        return: returns
+
+  max-len: 1
+  arrow-body-style: 1
+  no-unused-vars: 1

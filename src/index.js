@@ -1,5 +1,3 @@
-import defaultsDeep from 'lodash.defaultsdeep';
-
 export default class Plugin {
   /**
   * @static
@@ -9,24 +7,26 @@ export default class Plugin {
 
   /**
   * @constructor
-  * @param {Abigail} parent - the abigail instance
-  * @param {options} [options]
+  * @param {AsyncEmitter} parent - the abigail instance
+  * @param {string|number} value - a plugin command line argument value(ignore the boolean)
+  * @param {object} [options={}] - passed from package.json `abigail>plugin` field
   */
-  constructor(parent, options = {}) {
+  constructor(parent, value = true, options = {}) {
     if (typeof parent !== 'object' || typeof parent.on !== 'function') {
       throw new TypeError('parent is not a defined');
     }
 
     this.parent = parent;
-    this.opts = defaultsDeep(
+    this.opts = Object.assign(
       {},
-      typeof options !== 'boolean' ? { value: options } : {},
-      this.constructor.defaultOptions,
       { process },
+      this.constructor.defaultOptions,
+      options,
+      typeof value !== 'boolean' ? { value } : {},
     );
 
-    this.parent.on('beforeImmediate', () => this.pluginWillAttach());
-    this.parent.on('beforeExit', (exitCode) => this.pluginWillDetach(exitCode));
+    this.parent.once('beforeImmediate', (...args) => this.pluginWillAttach(...args));
+    this.parent.once('beforeExit', (...args) => this.pluginWillDetach(...args));
   }
 
   /**
@@ -37,6 +37,7 @@ export default class Plugin {
 
   /**
   * @method pluginWillDetach
+  * @param {number} exitCode - process exit code
   * @returns {undefined}
   */
   pluginWillDetach() {}
