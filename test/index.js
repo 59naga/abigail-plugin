@@ -10,6 +10,7 @@ import Plugin from '../src';
 class UserPlugin extends Plugin {
   static defaultOptions = {
     foo: 1,
+    value: 2,
   }
 
   pluginWillAttach() {
@@ -48,6 +49,14 @@ describe('Plugin', () => {
         return true;
       }
     );
+  });
+
+  it('command argument value should be defined in opts.value', () => {
+    // e.g. $ abby --plugin foor,bar,baz -> plugin.opts.value is 'foo,bar,baz'
+    const emitter = new AsyncEmitter;
+    const plugin = new UserPlugin(emitter, 'foo,bar,baz');
+
+    assert(plugin.opts.value === 'foo,bar,baz');
   });
 
   it('default value for the plugin should be defined in the static defaultOptions property', () => {

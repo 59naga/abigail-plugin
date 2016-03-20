@@ -18,7 +18,12 @@ export default class Plugin {
     }
 
     this.parent = parent;
-    this.opts = defaultsDeep({}, options, this.constructor.defaultOptions, { process });
+    this.opts = defaultsDeep(
+      {},
+      typeof options !== 'boolean' ? {value: options}: {},
+      this.constructor.defaultOptions,
+      { process },
+    );
 
     this.parent.on('beforeImmediate', () => this.pluginWillAttach());
     this.parent.on('beforeExit', (exitCode) => this.pluginWillDetach(exitCode));
