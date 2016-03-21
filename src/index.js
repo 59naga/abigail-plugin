@@ -9,7 +9,7 @@ export default class Plugin {
   * @constructor
   * @param {AsyncEmitter} parent - the abigail instance
   * @param {string|number} value - a plugin command line argument value(ignore the boolean)
-  * @param {object} [options={}] - passed from package.json `abigail>plugin` field
+  * @param {object} [options={}] - passed from package.json `abigail>plugins` field
   */
   constructor(parent, value = true, options = {}) {
     if (typeof parent !== 'object' || typeof parent.on !== 'function') {
@@ -25,8 +25,8 @@ export default class Plugin {
       typeof value !== 'boolean' ? { value } : {},
     );
 
-    this.parent.once('beforeImmediate', (...args) => this.pluginWillAttach(...args));
-    this.parent.once('beforeExit', (...args) => this.pluginWillDetach(...args));
+    this.parent.once('attach-plugin', (...args) => this.pluginWillAttach(...args));
+    this.parent.once('detach-plugin', (...args) => this.pluginWillDetach(...args));
   }
 
   /**
@@ -37,7 +37,7 @@ export default class Plugin {
 
   /**
   * @method pluginWillDetach
-  * @param {number} exitCode - process exit code
+  * @param {number} [exitCode=null] - process exit code
   * @returns {undefined}
   */
   pluginWillDetach() {}

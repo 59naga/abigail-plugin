@@ -73,21 +73,21 @@ describe('Plugin', () => {
     assert(plugin.opts.foo === 2);
   });
 
-  it('should do pre-processing at the pluginWillAttach', () => {
+  it('should do pre-processing at the attach-plugin event', () => {
     const emitter = new AsyncEmitter;
     const plugin = new UserPlugin(emitter);
 
-    return emitter.emit('beforeImmediate')
+    return emitter.emit('attach-plugin')
     .then((values) => {
       assert(values[0] === 1);
     });
   });
 
-  it('should do post-processing at the pluginWillDetach', () => {
+  it('should do post-processing at the detach-plugin event', () => {
     const emitter = new AsyncEmitter;
     const plugin = new UserPlugin(emitter);
 
-    return emitter.emit('beforeExit', 1)
+    return emitter.emit('detach-plugin', 1)
     .then((values) => {
       assert(values[0] === 2);
     });
