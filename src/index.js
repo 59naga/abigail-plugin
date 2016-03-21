@@ -1,3 +1,5 @@
+import { resolve as resolvePaths } from 'path';
+
 export default class Plugin {
   /**
   * @static
@@ -16,6 +18,7 @@ export default class Plugin {
       throw new TypeError('parent is not a defined');
     }
 
+    this.name = require(resolvePaths(module.parent.id, '..', '..', 'package.json')).name;
     this.parent = parent;
     this.opts = Object.assign(
       {},

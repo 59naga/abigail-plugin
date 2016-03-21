@@ -51,6 +51,13 @@ describe('Plugin', () => {
     );
   });
 
+  it('should define the plugin name as a `name` property', () => {
+    const emitter = new AsyncEmitter;
+    const plugin = new UserPlugin(emitter);
+
+    assert(plugin.name === 'abigail-plugin');
+  });
+
   it('command argument value should be defined in opts.value unless boolean', () => {
     let plugin;
     // e.g. $ abby --plugin foor,bar,baz -> plugin.opts.value is 'foo,bar,baz'
