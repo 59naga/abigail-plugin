@@ -1,7 +1,7 @@
 {
   "name": "abigail-plugin",
   "description": "abigail plugins base class",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "lib",
   "files": [
     "lib"

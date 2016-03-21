@@ -18,7 +18,7 @@ export default class Plugin {
       throw new TypeError('parent is not a defined');
     }
 
-    this.name = require(resolvePaths(module.parent.id, '..', '..', 'package.json')).name;
+    this.name = this.constructor.pluginName || require(resolvePaths(module.parent.id, '..', '..', 'package.json')).name;
     this.parent = parent;
     this.opts = Object.assign(
       {},
@@ -28,8 +28,8 @@ export default class Plugin {
       typeof value !== 'boolean' ? { value } : {},
     );
 
-    this.parent.once('attach-plugin', (...args) => this.pluginWillAttach(...args));
-    this.parent.once('detach-plugin', (...args) => this.pluginWillDetach(...args));
+    this.parent.once('attach-plugins', (...args) => this.pluginWillAttach(...args));
+    this.parent.once('detach-plugins', (...args) => this.pluginWillDetach(...args));
   }
 
   /**

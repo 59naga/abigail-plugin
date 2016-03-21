@@ -58,6 +58,16 @@ describe('Plugin', () => {
     assert(plugin.name === 'abigail-plugin');
   });
 
+  it('if pluginName is defined, it should be given more priority there as `name` property', () => {
+    class ExtraUserPlugin extends UserPlugin {
+      static pluginName = 'abigail-plugin-extra';
+    }
+    const emitter = new AsyncEmitter;
+    const plugin = new ExtraUserPlugin(emitter);
+
+    assert(plugin.name === 'abigail-plugin-extra');
+  });
+
   it('command argument value should be defined in opts.value unless boolean', () => {
     let plugin;
     // e.g. $ abby --plugin foor,bar,baz -> plugin.opts.value is 'foo,bar,baz'
@@ -80,21 +90,21 @@ describe('Plugin', () => {
     assert(plugin.opts.foo === 2);
   });
 
-  it('should do pre-processing at the attach-plugin event', () => {
+  it('should do pre-processing at the attach-plugins event', () => {
     const emitter = new AsyncEmitter;
     const plugin = new UserPlugin(emitter);
 
-    return emitter.emit('attach-plugin')
+    return emitter.emit('attach-plugins')
     .then((values) => {
       assert(values[0] === 1);
     });
   });
 
-  it('should do post-processing at the detach-plugin event', () => {
+  it('should do post-processing at the detach-plugins event', () => {
     const emitter = new AsyncEmitter;
     const plugin = new UserPlugin(emitter);
 
-    return emitter.emit('detach-plugin', 1)
+    return emitter.emit('detach-plugins', 1)
     .then((values) => {
       assert(values[0] === 2);
     });
