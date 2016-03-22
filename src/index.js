@@ -1,4 +1,3 @@
-import { resolve as resolvePaths } from 'path';
 import paramCase from 'param-case';
 
 export default class Plugin {
@@ -29,8 +28,34 @@ export default class Plugin {
       typeof value !== 'boolean' ? { value } : {},
     );
 
-    this.parent.once('attach-plugins', (...args) => this.pluginWillAttach(...args));
-    this.parent.once('detach-plugins', (...args) => this.pluginWillDetach(...args));
+    this._pluginWillAttach = (...args) => this.pluginWillAttach(...args);
+    this._pluginWillDetach = (...args) => this.pluginWillDetach(...args);
+    this.parent.once('attach-plugins', this._pluginWillAttach);
+    this.parent.once('detach-plugins', this._pluginWillDetach);
+  }
+
+  /**
+  * @method getPlugin
+  * @param {string} name - a param-cased constructor.name
+  * @returns {Plugin} instance - the plugin instance
+  */
+  getPlugin(name) {
+    for (const key in this.parent.plugins || {}) {
+      if (key === name) {
+        return this.parent.plugins[key];
+      }
+    }
+
+    throw new Error(`no plugins found: ${name}`);
+  }
+
+  /**
+  * @method abort
+  * @returns {undefined}
+  */
+  abort() {
+    this.parent.removeListener('attach-plugins', this._pluginWillAttach);
+    this.parent.removeListener('detach-plugins', this._pluginWillDetach);
   }
 
   /**
