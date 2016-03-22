@@ -51,21 +51,11 @@ describe('Plugin', () => {
     );
   });
 
-  it('should define the plugin name as a `name` property', () => {
+  it('should define the param-case phased constructor.name to instance.name', () => {
     const emitter = new AsyncEmitter;
     const plugin = new UserPlugin(emitter);
 
-    assert(plugin.name === 'abigail-plugin');
-  });
-
-  it('if pluginName is defined, it should be given more priority there as `name` property', () => {
-    class ExtraUserPlugin extends UserPlugin {
-      static pluginName = 'abigail-plugin-extra';
-    }
-    const emitter = new AsyncEmitter;
-    const plugin = new ExtraUserPlugin(emitter);
-
-    assert(plugin.name === 'abigail-plugin-extra');
+    assert(plugin.name === 'user-plugin');
   });
 
   it('command argument value should be defined in opts.value unless boolean', () => {

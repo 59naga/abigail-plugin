@@ -1,4 +1,5 @@
 import { resolve as resolvePaths } from 'path';
+import paramCase from 'param-case';
 
 export default class Plugin {
   /**
@@ -18,7 +19,7 @@ export default class Plugin {
       throw new TypeError('parent is not a defined');
     }
 
-    this.name = this.constructor.pluginName || require(resolvePaths(module.parent.id, '..', '..', 'package.json')).name;
+    this.name = paramCase(this.constructor.name);
     this.parent = parent;
     this.opts = Object.assign(
       {},
