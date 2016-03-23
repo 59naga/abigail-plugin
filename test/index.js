@@ -35,6 +35,11 @@ describe('Plugin', () => {
       return emitter.emit('attach-plugins')
       .then((values) => {
         assert(values[0] === 1);
+
+        return emitter.emit('attach-plugins');
+      })
+      .then((values) => {
+        assert(values[0] === undefined);
       });
     });
 
@@ -45,22 +50,6 @@ describe('Plugin', () => {
       return emitter.emit('detach-plugins', 1)
       .then((values) => {
         assert(values[0] === 2);
-      });
-    });
-
-    it('if run the abort, it should instantly suspend dependence on parent', () => {
-      const emitter = new AsyncEmitter;
-      const plugin = new UserPlugin(emitter);
-      plugin.abort();
-
-      return emitter.emit('attach-plugins')
-      .then((values) => {
-        assert(values[0] === undefined);
-
-        return emitter.emit('detach-plugins', 1);
-      })
-      .then((values) => {
-        assert(values[0] === undefined);
       });
     });
   });
@@ -128,6 +117,24 @@ describe('Plugin', () => {
       const ref = plugin.getPlugin('other');
 
       assert(ref === 1);
+    });
+  });
+
+  describe('::abort', () => {
+    it('if run the abort, it should instantly suspend dependence on parent', () => {
+      const emitter = new AsyncEmitter;
+      const plugin = new UserPlugin(emitter);
+      plugin.abort();
+
+      return emitter.emit('attach-plugins')
+      .then((values) => {
+        assert(values[0] === undefined);
+
+        return emitter.emit('detach-plugins', 1);
+      })
+      .then((values) => {
+        assert(values[0] === undefined);
+      });
     });
   });
 });

@@ -27,11 +27,10 @@ export default class Plugin {
       options,
       typeof value !== 'boolean' ? { value } : {},
     );
+    this.unsubscribes = [];
 
-    this._pluginWillAttach = (...args) => this.pluginWillAttach(...args);
-    this._pluginWillDetach = (...args) => this.pluginWillDetach(...args);
-    this.parent.once('attach-plugins', this._pluginWillAttach);
-    this.parent.once('detach-plugins', this._pluginWillDetach);
+    this.subscribe('attach-plugins', (...args) => this.pluginWillAttach(...args), true);
+    this.subscribe('detach-plugins', (...args) => this.pluginWillDetach(...args), true);
   }
 
   /**
@@ -50,12 +49,34 @@ export default class Plugin {
   }
 
   /**
+  * @method subscribe
+  * @param {string} event - a listen event name
+  * @param {function} listener - a listener
+  * @param {boolean} [once=false] - if true, listen only once
+  * @returns {function} unsubscribe - removeListener shortcut function
+  */
+  subscribe(event, listener, once = false) {
+    const unsubscribe = () => this.parent.removeListener(event, listener);
+
+    if (once) {
+      this.parent.once(event, listener);
+    } else {
+      this.parent.on(event, listener);
+    }
+    this.unsubscribes.push(unsubscribe);
+
+    return unsubscribe;
+  }
+
+  /**
   * @method abort
   * @returns {undefined}
   */
   abort() {
-    this.parent.removeListener('attach-plugins', this._pluginWillAttach);
-    this.parent.removeListener('detach-plugins', this._pluginWillDetach);
+    this.unsubscribes.forEach((unsubscribe) => {
+      unsubscribe();
+    });
+    this.unsubscribes = [];
   }
 
   /**
