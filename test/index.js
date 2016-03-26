@@ -56,7 +56,7 @@ describe('Plugin', () => {
 
   describe('constructor', () => {
     it('if first argument isnt EE, should throw an error', () => {
-      const expectMessage = 'parent is not a defined';
+      const expectMessage = 'parent is not a asyncemitter';
 
       assert.throws(
         () => {

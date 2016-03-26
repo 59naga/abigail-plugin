@@ -15,7 +15,7 @@ export default class Plugin {
   */
   constructor(parent, value = true, options = {}) {
     if (typeof parent !== 'object' || typeof parent.on !== 'function') {
-      throw new TypeError('parent is not a defined');
+      throw new TypeError('parent is not a asyncemitter');
     }
 
     this.name = paramCase(this.constructor.name);
