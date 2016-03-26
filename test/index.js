@@ -137,4 +137,41 @@ describe('Plugin', () => {
       });
     });
   });
+
+  describe('::getProps / ::setProps', () => {
+    class First extends Plugin {
+      constructor(...args) {
+        super(...args);
+
+        this.setProps({ foo: 'bar' });
+        this.abort();
+      }
+    }
+    class Second extends Plugin {
+      pluginWillAttach() {
+        return this.getProps().foo;
+      }
+    }
+
+    it('if setProps is unexecuted, it should return an empty object', () => {
+      const emitter = new AsyncEmitter;
+      const second = new Second(emitter);
+
+      return emitter.emit('attach-plugins')
+      .then((values) => {
+        assert(values[0] === undefined);
+      });
+    });
+
+    it('should obtain information from other plugin indirectly', () => {
+      const emitter = new AsyncEmitter;
+      const first = new First(emitter);
+      const second = new Second(emitter);
+
+      return emitter.emit('attach-plugins')
+      .then((values) => {
+        assert(values[0] === 'bar');
+      });
+    });
+  });
 });

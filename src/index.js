@@ -80,6 +80,30 @@ export default class Plugin {
   }
 
   /**
+  * @method setProps
+  * @param {object} [newProps={}]
+  * @returns {undefined}
+  */
+  setProps(newProps = {}) {
+    this.parent.props = Object.assign(
+      {},
+      this.parent.props || {},
+      newProps,
+    );
+  }
+
+  /**
+  * @method getProps
+  * @returns {object} props
+  */
+  getProps() {
+    return Object.assign(
+      {},
+      this.parent.props || {},
+    );
+  }
+
+  /**
   * @method pluginWillAttach
   * @returns {undefined}
   */
