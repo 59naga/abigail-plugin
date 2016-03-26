@@ -41,7 +41,9 @@
     "type": "git",
     "url": "https://github.com/abigailjs/abigail-plugin.git"
   },
-  "keywords": [],
+  "keywords": [
+    "abigail-plugin"
+  ],
   "author": "59naga <i59naga@icloud.com> (http://berabou.me/)",
   "license": "MIT",
   "bugs": {
