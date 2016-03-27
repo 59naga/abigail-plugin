@@ -112,8 +112,12 @@ describe('Plugin', () => {
   describe('::getPlugin', () => {
     it('should return the matching plugin name reference', () => {
       const emitter = new AsyncEmitter;
-      emitter.plugins = { other: 1 };
       const plugin = new UserPlugin(emitter);
+      plugin.setProps({
+        plugins: {
+          other: 1,
+        },
+      });
       const ref = plugin.getPlugin('other');
 
       assert(ref === 1);

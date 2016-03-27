@@ -39,9 +39,10 @@ export default class Plugin {
   * @returns {Plugin} instance - the plugin instance
   */
   getPlugin(name) {
-    for (const key in this.parent.plugins || {}) {
+    const plugins = this.getProps().plugins || {};
+    for (const key in plugins) {
       if (key === name) {
-        return this.parent.plugins[key];
+        return plugins[key];
       }
     }
 
