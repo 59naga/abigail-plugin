@@ -29,8 +29,9 @@ export default class Plugin {
     );
     this.unsubscribes = [];
 
-    this.subscribe('attach-plugins', (...args) => this.pluginWillAttach(...args), true);
-    this.subscribe('detach-plugins', (...args) => this.pluginWillDetach(...args), true);
+    this.subscribe('initialized', () => this.pluginDidInitialize(), true);
+    this.subscribe('attach-plugins', () => this.pluginWillAttach(), true);
+    this.subscribe('detach-plugins', () => this.pluginWillDetach(), true);
   }
 
   /**
@@ -57,13 +58,8 @@ export default class Plugin {
   * @returns {function} unsubscribe - removeListener shortcut function
   */
   subscribe(event, listener, once = false) {
-    const unsubscribe = () => this.parent.removeListener(event, listener);
+    const unsubscribe = this.parent.subscribe(event, listener, once);
 
-    if (once) {
-      this.parent.once(event, listener);
-    } else {
-      this.parent.on(event, listener);
-    }
     this.unsubscribes.push(unsubscribe);
 
     return unsubscribe;
@@ -105,12 +101,27 @@ export default class Plugin {
   }
 
   /**
+  * execute only once before the parse
+  * the plugin lifecycle method of plugin via `initialized`
+  *
+  * @method pluginDidInitialize
+  * @returns {undefined}
+  */
+  pluginDidInitialize() {}
+
+  /**
+  * execute only once before the launch
+  * the plugin lifecycle method of plugin via `attach-plugins`
+  *
   * @method pluginWillAttach
   * @returns {undefined}
   */
   pluginWillAttach() {}
 
   /**
+  * execute only once before the exit
+  * the plugin lifecycle method via `detach-plugins`
+  *
   * @method pluginWillDetach
   * @param {number} [exitCode=null] - process exit code
   * @returns {undefined}

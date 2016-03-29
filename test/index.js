@@ -13,6 +13,9 @@ class UserPlugin extends Plugin {
     value: 2,
   }
 
+  pluginDidInitialize() {
+    return new Promise((resolve) => resolve(0));
+  }
   pluginWillAttach() {
     return new Promise((resolve) => resolve(1));
   }
@@ -24,6 +27,21 @@ class UserPlugin extends Plugin {
 // specs
 describe('Plugin', () => {
   describe('plugin lifecycle', () => {
+    it('pluginDidInitialize should call only once in the initialized events', () => {
+      const emitter = new AsyncEmitter;
+      const plugin = new UserPlugin(emitter);
+
+      return emitter.emit('initialized')
+      .then((values) => {
+        assert(values[0] === 0);
+
+        return emitter.emit('initialized');
+      })
+      .then((values) => {
+        assert(values[0] === undefined);
+      });
+    });
+
     it('pluginWillAttach should call only once in the attach-plugins events', () => {
       const emitter = new AsyncEmitter;
       const plugin = new UserPlugin(emitter);
