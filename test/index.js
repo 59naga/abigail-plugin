@@ -14,21 +14,17 @@ class UserPlugin extends Plugin {
   }
 
   pluginWillAttach() {
-    return new Promise((resolve) => {
-      resolve(1);
-    });
+    return new Promise((resolve) => resolve(1));
   }
-  pluginWillDetach(exitCode) {
-    return new Promise((resolve) => {
-      resolve(exitCode + 1);
-    });
+  pluginWillDetach() {
+    return new Promise((resolve) => resolve(2));
   }
 }
 
 // specs
 describe('Plugin', () => {
   describe('plugin lifecycle', () => {
-    it('should do pre-processing at the attach-plugins event', () => {
+    it('pluginWillAttach should call only once in the attach-plugins events', () => {
       const emitter = new AsyncEmitter;
       const plugin = new UserPlugin(emitter);
 
@@ -43,7 +39,7 @@ describe('Plugin', () => {
       });
     });
 
-    it('should do post-processing at the detach-plugins event', () => {
+    it('pluginWillDetach should call only once in the attach-plugins events', () => {
       const emitter = new AsyncEmitter;
       const plugin = new UserPlugin(emitter);
 
