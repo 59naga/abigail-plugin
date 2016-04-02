@@ -11,8 +11,9 @@
     },
     "production": {
       "plugins": [
+        "transform-object-assign",
         "add-module-exports"
-      ]
+      ],
     }
   }
 }
