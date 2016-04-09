@@ -101,8 +101,8 @@ export default class Plugin {
   }
 
   /**
+  * the plugin lifecycle method
   * execute only once before the parse
-  * the plugin lifecycle method of plugin via `initialized`
   *
   * @method pluginDidInitialize
   * @returns {undefined}
@@ -110,8 +110,8 @@ export default class Plugin {
   pluginDidInitialize() {}
 
   /**
+  * the plugin lifecycle method
   * execute only once before the launch
-  * the plugin lifecycle method of plugin via `attach-plugins`
   *
   * @method pluginWillAttach
   * @returns {undefined}
@@ -119,8 +119,8 @@ export default class Plugin {
   pluginWillAttach() {}
 
   /**
+  * the plugin lifecycle method
   * execute only once before the exit
-  * the plugin lifecycle method via `detach-plugins`
   *
   * @method pluginWillDetach
   * @param {number} [exitCode=null] - process exit code
